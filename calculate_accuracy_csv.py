@@ -23,6 +23,12 @@ def cdf(lists,top,title):
 
 
 def calculate_accuracy(data_type,csv_filepath):
+    """
+    calculate the accuracy of csv file, given each line: caseID, engineer_ID,  probabilities for 871 engineers
+    :param data_type: ensemble or cnn or rf
+    :param csv_filepath: csv_file
+    :return:
+    """
     num_cases = 0
     num_match = 0
     num_match5 = 0

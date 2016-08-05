@@ -1,4 +1,9 @@
 def calculate_medium(file):
+    """
+    calculate text medium line lengh
+    :param file: text file which contains notes in each line
+    :return: None
+    """
     with open(file,"r") as file:
         length = []
         for data in file.readlines():

@@ -16,9 +16,19 @@ import time
 import post_filter
 
 def strip(s):
+    """
+    strip the sentence
+    :param s: sentence string
+    :return: stripped sentence
+    """
     return s.strip()
 
 def divideCase(input_case):
+    """
+    divide case into caseId, label, series, platform, notes
+    :param input_case: string text
+    :return: caseId, label, series, platform, notes
+    """
     parts = map(strip, input_case.split("#~$~#"))
     caseId = parts[0]
     label = parts[1]
@@ -37,12 +47,24 @@ def divideCase(input_case):
     return caseId, label, series, platform, notes
 
 def lower(notes):
+    """
+    put everything lower case except "OBJ_IP_ADDRESS","OBJ_NUM"
+    :param notes: note string
+    :return: lower case note
+    """
     notes = notes.split(" ")
     notes = [note.lower() if note not in ("OBJ_IP_ADDRESS","OBJ_NUM") else note for note in notes]
     return " ".join(notes)
 
 
 def process_case_string(case_string, pd_only=True, prepend_feat=False):
+    """
+    process caseId, label, series, platform, notes to (caseId, label, X_case_data)
+    :param case_string: case string
+    :param pd_only: if only have problem description
+    :param prepend_feat: if need to pre-pend the features
+    :return: (caseId, label, X_case_data)
+    """
     caseId, label, series, platform, notes = divideCase(case_string)
 
     X_case_data = []
@@ -74,6 +96,13 @@ def process_case_string(case_string, pd_only=True, prepend_feat=False):
 
 # @profile
 def load_test_data(filepath='caseId_note_aggregation_test_data_with_features', pd_only=True, prepend_feat=False):
+    """
+    load the test data
+    :param filepath: file path
+    :param pd_only: if only problem description
+    :param prepend_feat: if need to prepend the features
+    :return: test data
+    """
     cases = []
 
     with open(filepath, 'r') as f:
@@ -85,6 +114,11 @@ def load_test_data(filepath='caseId_note_aggregation_test_data_with_features', p
     return cases[-1250:]
 
 def write_to_txt(dataset):
+    """
+    write case data into text file
+    :param dataset: processed_data
+    :return: None
+    """
     global total_notes
     global notes_len
     # with open('pd_test_set','wb') as file:
@@ -102,6 +136,11 @@ def write_to_txt(dataset):
 
 
 def calculate_medium(file):
+    """
+    calculate the medium value for the file line length
+    :param file: file name
+    :return: None
+    """
     with open(file,"r") as file:
         length = []
         for data in file.readlines():
@@ -110,6 +149,12 @@ def calculate_medium(file):
         print "medium is: ", length[len(length)/2]
 
 def write_to_CSV(data,dataset):
+    """
+    write the probability into csv
+    :param data: data name
+    :param dataset: test data
+    :return: None
+    """
     with open('CNN_case_prob_'+ data + '_6.csv', 'wb') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -148,6 +193,12 @@ total_notes = 0
 notes_len = []
 
 def classify_case_cnn(case,label):
+    """
+    wrapper function
+    :param case: case note
+    :param label: label
+    :return: probablity
+    """
     if len(case) > 0:
         return classifier.predict_proba_case(case,label)
 
